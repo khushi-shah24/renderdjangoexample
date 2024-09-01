@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,10 +79,16 @@ WSGI_APPLICATION = 'epiphany.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-database_url=os.environ.get('DATABASE_URL')
-DATABASES = {
-    'default': dj_database_url.parse(database_url)    
-}
+database_url = os.environ.get('DATABASE_URL')
+
+if isinstance(database_url, bytes):
+    database_url = database_url.decode('utf-8')
+
+if database_url:
+    DATABASES = {
+        'default': dj_database_url.parse(database_url,conn_max_age=600)
+    }
+
 
 
 
@@ -123,6 +130,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'epiphany', 'static')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
