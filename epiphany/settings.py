@@ -85,17 +85,14 @@ WSGI_APPLICATION = 'epiphany.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-database_url = os.environ.get('DATABASE_URL')
+print(os.environ['DATABASE_URL'])
 
-if isinstance(database_url, bytes):
-    database_url = database_url.decode('utf-8')
-
-if database_url:
-    DATABASES = {
-        'default': dj_database_url.parse(database_url,conn_max_age=600)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DATABASE_URL'],
     }
-
-
+}
 
 
 
@@ -152,3 +149,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
