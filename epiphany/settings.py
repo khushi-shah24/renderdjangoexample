@@ -15,6 +15,8 @@ from django.core.management.utils import get_random_secret_key
 import dj_database_url
 import cloudinary
 import cloudinary_storage
+import cloudinary.uploader
+import cloudinary.api
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,8 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 
 # Quick-start development settings - unsuitable for production
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","").split(" ")
+# DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","").split(" ")
+DEBUG = True
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -83,7 +87,7 @@ DATABASES = {
         'PORT': '5432',          # Default PostgreSQL port
     }
 }
-DATABASES['default']=dj_database_url.parse(os.environ.get('DATABASE_URL'))
+# DATABASES['default']=dj_database_url.parse(os.environ.get('DATABASE_URL'))
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -121,6 +125,12 @@ CLOUDINARY_STORAGE = {
     'API_KEY': '434851222372632',
     'API_SECRET': 'H2R7fHd3dEmwILUplicov8JfWmI',
 }
+cloudinary.config(
+    cloud_name='de7folpai',
+    api_key='434851222372632',
+    api_secret='H2R7fHd3dEmwILUplicov8JfWmI'
+)
+
 
 # Set Cloudinary as the default storage for media files
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
