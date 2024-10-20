@@ -8,6 +8,11 @@ from .models import Post
 from django.http import HttpResponseForbidden
 from django.db import transaction
 from django.db import connection
+import cloudinary.uploader
+import cloudinary.api
+from django.contrib.auth.models import User
+import os
+from django.conf import settings
 
 @login_required
 @transaction.atomic
@@ -42,17 +47,37 @@ def post_detail(request, post_id):
         form = CommentForm()
     return render(request, 'post_detail.html', {'post': post, 'comments': comments, 'form': form})
 
+# def new_post(request):
+#     if request.method == 'POST':
+#         form = PostForm(request.POST,request.FILES)
+#         if form.is_valid():
+#             post = form.save(commit=False)
+#             post.author = request.user
+#             post.save()
+#             return redirect('home')
+#     else:
+#         form = PostForm()
+#     return render(request, 'new_post.html', {'form': form})
+@login_required
 def new_post(request):
     if request.method == 'POST':
-        form = PostForm(request.POST,request.FILES)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            
+            # Manually upload video to Cloudinary
+            if request.FILES.get('video'):
+                video_file = request.FILES['video']
+                cloudinary_response = cloudinary.uploader.upload(video_file, resource_type='video')
+                post.video = cloudinary_response['secure_url']  # Save the video URL to the model
+
             post.save()
             return redirect('home')
     else:
         form = PostForm()
     return render(request, 'new_post.html', {'form': form})
+
 
 def signup(request):
     if request.method == 'POST':
