@@ -15,9 +15,11 @@ def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     
     if post.author == request.user:
+        print(f'Deleting post: {post.title} by {request.user}')
         post.delete()
         return redirect('home')
     else:
+        print(f'User {request.user} tried to delete post {post.title} without permission')
         return HttpResponseForbidden('You are not allowed to delete this post.')
 
 

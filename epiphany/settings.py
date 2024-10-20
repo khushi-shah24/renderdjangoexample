@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 
 # Quick-start development settings - unsuitable for production
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","").split(" ")
 
 
 # Application definition
