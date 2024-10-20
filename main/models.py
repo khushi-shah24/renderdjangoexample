@@ -7,13 +7,13 @@ class Post(models.Model):
     content = models.TextField()
     
     # Store videos in Cloudinary
-    video = CloudinaryField('video', blank=True, null=True)  # Replace FileField
+    video = CloudinaryField('video', blank=True, null=True)  # Replacing FileField for Cloudinary
     
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     
     # Store images in Cloudinary
-    image = CloudinaryField('image', blank=True, null=True)  # Replace ImageField
+    image = CloudinaryField('image', blank=True, null=True)  # Replacing ImageField for Cloudinary
 
     def __str__(self):
         return self.title
