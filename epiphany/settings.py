@@ -11,33 +11,23 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-import django_heroku
+from django.core.management.utils import get_random_secret_key
 import dj_database_url
 import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-from cloudinary_storage.storage import MediaCloudinaryStorage
+import cloudinary_storage
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-from django.core.management.utils import get_random_secret_key
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False").lower()=="true"
-
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
-
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'cloudinary', 
+    'cloudinary',
     'cloudinary_storage',
 ]
 
@@ -81,24 +71,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'epiphany.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-print(os.environ['DATABASE_URL'])
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DATABASE_URL'],
+        'ENGINE': 'django.db.backends.postgresql',  # SQLite database
+        'NAME': 'epiphany_db',  # Your database name
+        'USER': 'postgres',      # Your database username
+        'PASSWORD': 'root',      # Your database password
+        'HOST': 'localhost',     # Usually 'localhost'
+        'PORT': '5432',          # Default PostgreSQL port
     }
 }
-
-
+DATABASES['default']=dj_database_url.parse(os.environ.get('DATABASE_URL'))
 
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -114,40 +101,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Asia/Kolkata'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'epiphany', 'static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('de7folpai'),
-    'API_KEY': os.environ.get('434851222372632'),
-    'API_SECRET': os.environ.get('H2R7fHd3dEmwILUplicov8JfWmI'),
-}
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
