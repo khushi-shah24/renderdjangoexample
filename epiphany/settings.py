@@ -13,8 +13,8 @@ import os
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
 import dj_database_url
-# import cloudinary
-# import cloudinary_storage
+import cloudinary
+import cloudinary_storage
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -115,6 +115,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'de7folpai',
+    'API_KEY': '434851222372632',
+    'API_SECRET': 'H2R7fHd3dEmwILUplicov8JfWmI',
+}
+
+# Set Cloudinary as the default storage for media files
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Media files
 MEDIA_URL = '/media/'
